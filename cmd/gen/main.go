@@ -6,10 +6,17 @@ import (
 	"text/template"
 )
 
-//go:generate sh -c "go run main.go -name=String -type=string > ../../strings.go"
+//go:generate sh -c "go run main.go -name=String -type=string > ../../string.go"
+//go:generate sh -c "go run main.go -name=Int -type=int -val 0 > ../../int.go"
+//go:generate sh -c "go run main.go -name=Int64 -type=int64 -val 'int64(0)' > ../../int64.go"
+//go:generate sh -c "go run main.go -name=Uint -type=uint > -val 'uint(0)' ../../uint.go"
+//go:generate sh -c "go run main.go -name=Uint64 -type=uint64 -val 'uint64(0)' > ../../uint64.go"
+//go:generate sh -c "go run main.go -name=Bool -type=bool -val 'false' > ../../bool.go"
+//go:generate sh -c "go run main.go -name=Float64 -type=float64 -val '1.0' > ../../float64.go"
 type data struct {
 	T     string
 	TName string
+	TVal  string
 }
 
 func main() {
@@ -17,10 +24,11 @@ func main() {
 
 	flag.StringVar(&d.T, "type", "", "The type.")
 	flag.StringVar(&d.TName, "name", "", "The name of the type.")
+	flag.StringVar(&d.TVal, "val", `""`, "A value of the type.")
 
 	flag.Parse()
 
-	t := template.Must(template.New("queue").Parse(tpl))
+	t := template.Must(template.New("flags").Parse(tpl))
 	t.Execute(os.Stdout, d)
 }
 
@@ -38,7 +46,7 @@ type {{.TName}}Value struct {
 // the first one to yield a valid value is chosen.
 // If no resolver yileds a valid value the default flag value is used.
 // If flag is provided as a cli arg it will take precedance over all resolvers and the default value.
-func (fs *FlagSet) {{.TName}}(name, usage {{.T}}, val {{.T}}, r ...ResolverFunc) *{{.T}} {
+func (fs *FlagSet) {{.TName}}(name, usage string, val {{.T}}, r ...ResolverFunc) *{{.T}} {
 	fs.initFlagSet()
 
 	v := {{.TName}}Value{
@@ -66,7 +74,7 @@ func (fs *FlagSet) parse{{.TName}}Vals() {
 		}
 
 		for _, r := range {{.T}}Val.resolvers {
-			if r(fs, {{.T}}Val.name, "", i) {
+			if r(fs, {{.T}}Val.name, {{.TVal}}, i) {
 				break
 			}
 		}

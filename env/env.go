@@ -10,13 +10,15 @@ import (
 	"github.com/aneshas/flags"
 )
 
+const configKey = "flags_env_core_resolver"
+
 func WithPrefix(prefix string) flags.FlagSetOption {
 	return func(fs *flags.FlagSet) {
-		fs.EnvPrefix = prefix
+		fs.Config[configKey] = prefix
 	}
 }
 
-func ByFlagName() flags.ResolverFunc {
+func ByName() flags.ResolverFunc {
 	return newEnv("")
 }
 
@@ -29,7 +31,14 @@ func newEnv(name string) flags.ResolverFunc {
 		if name == "" {
 			name = strings.ToUpper(flag)
 		}
-		val := os.Getenv(fmt.Sprintf("%s%s", fs.EnvPrefix, name))
+
+		var prefix string
+
+		if p, ok := fs.Config[configKey]; ok {
+			prefix = p.(string)
+		}
+
+		val := os.Getenv(fmt.Sprintf("%s%s", prefix, name))
 
 		if val == "" {
 			return false

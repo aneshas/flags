@@ -14,18 +14,18 @@ func main() {
 
 	var (
 		host     = fs.String("host", "DB host", "localhost")
-		username = fs.String("username", "DB username", "root", env.ByFlagName(), env.Named("FOO"))
-		port     = fs.Int("port", "DB port", 3306, env.ByFlagName())
-		cfg      = fs.String("config", "JSON Config file", "", env.ByFlagName()) // This is convenient - we can also choose how to provide or override config files
+		username = fs.String("username", "DB username", "root", env.ByName(), env.Named("FOO"))
+		port     = fs.Int("port", "DB port", 3306, json.ByName(), env.ByName())
+		cfg      = fs.String("config", "JSON Config file", "config.json", env.ByName())
 	)
 
 	fs.Parse(
 		os.Args,
 		env.WithPrefix("MYAPP_"),
-		json.WithJSONConfig(*cfg),
+		json.WithConfigFile(cfg),
 	)
 
-	fmt.Println("Host: ", *host)
+	fmt.Printf("Host: -%s-\n", *host)
 	fmt.Println("Username: ", *username)
 	fmt.Println("Port: ", *port)
 }

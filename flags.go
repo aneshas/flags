@@ -17,10 +17,10 @@ type Value struct {
 
 // FlagSet represents flags container.
 type FlagSet struct {
-	fs        *flag.FlagSet
-	args      []string
-	EnvPrefix string
-	Values    []interface{}
+	fs     *flag.FlagSet
+	args   []string
+	Values []interface{}
+	Config map[string]interface{}
 }
 
 // FlagSetOption func mainly used for extending FlagSet configuration for
@@ -32,6 +32,10 @@ type FlagSetOption func(*FlagSet)
 // If command line flag is set it takes precedance over all other resolvers
 // which are skipped in that case.
 func (fs *FlagSet) Parse(args []string, opts ...FlagSetOption) {
+	if fs.Config == nil {
+		fs.Config = make(map[string]interface{})
+	}
+
 	for _, opt := range opts {
 		opt(fs)
 	}
@@ -43,8 +47,13 @@ func (fs *FlagSet) Parse(args []string, opts ...FlagSetOption) {
 }
 
 func (fs *FlagSet) parseVals() {
-	fs.parseIntVals()
 	fs.parseStringVals()
+	fs.parseIntVals()
+	fs.parseInt64Vals()
+	fs.parseUintVals()
+	fs.parseUint64Vals()
+	fs.parseBoolVals()
+	fs.parseFloat64Vals()
 }
 
 func (fs *FlagSet) initFlagSet() {

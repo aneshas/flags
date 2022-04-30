@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/aneshas/flags"
 	"github.com/aneshas/flags/env"
@@ -15,10 +16,11 @@ func main() {
 		host     = fs.String("host", "DB host", "localhost")
 		username = fs.String("username", "DB username", "root", env.ByFlagName(), env.Named("FOO"))
 		port     = fs.Int("port", "DB port", 3306, env.ByFlagName())
-		cfg      = fs.String("config", "JSON Config file", "config.json", env.ByFlagName()) // This is convenient - we can also choose how to provide or override config files
+		cfg      = fs.String("config", "JSON Config file", "", env.ByFlagName()) // This is convenient - we can also choose how to provide or override config files
 	)
 
 	fs.Parse(
+		os.Args,
 		env.WithPrefix("MYAPP_"),
 		json.WithJSONConfig(*cfg),
 	)

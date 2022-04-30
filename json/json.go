@@ -6,16 +6,16 @@ func WithJSONConfig(path string) flags.FlagSetOption {
 	return func(fs *flags.FlagSet) {}
 }
 
-func ByFlagName() flags.Resolver {
+func ByFlagName() flags.ResolverFunc {
 	return newEnv("")
 }
 
-func Named(name string) flags.Resolver {
+func Named(name string) flags.ResolverFunc {
 	return newEnv(name)
 }
 
-func newEnv(name string) flags.Resolver {
-	return func(fs *flags.FlagSet, flag string, t interface{}, i int) {
+func newEnv(name string) flags.ResolverFunc {
+	return func(fs *flags.FlagSet, flag string, t interface{}, i int) bool {
 		// if name == "" {
 		// 	name = strings.ToUpper(flag)
 		// }
@@ -41,5 +41,7 @@ func newEnv(name string) flags.Resolver {
 		// default:
 		// 	panic("unsupported flag type")
 		// }
+
+		return true
 	}
 }

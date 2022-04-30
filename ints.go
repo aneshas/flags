@@ -1,19 +1,19 @@
 package flags
 
-import "flag"
-
 type IntValue struct {
 	Value
 	V *int
 }
 
-func (fs *FlagSet) Int(name, usage string, val int, r ...Resolver) *int {
+func (fs *FlagSet) Int(name, usage string, val int, r ...ResolverFunc) *int {
+	fs.initFlagSet()
+
 	v := IntValue{
 		Value: Value{
 			name:      name,
 			resolvers: r,
 		},
-		V: flag.Int(name, val, usage),
+		V: fs.fs.Int(name, val, usage),
 	}
 
 	fs.Values = append(fs.Values, v)
@@ -28,7 +28,7 @@ func (fs *FlagSet) parseIntVals() {
 			continue
 		}
 
-		if hasArg(intVal.name) {
+		if fs.hasArg(intVal.name) {
 			continue
 		}
 

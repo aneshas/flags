@@ -71,7 +71,7 @@ type FlagSetOption func(*FlagSet)
 
 // Parse parses command line flags and runs all additional resolvers for
 // each flag in sequence.
-// If command line flag is set it takes precedance over all other resolvers
+// If command line flag is set it takes precedence over all other resolvers
 // which are skipped in that case.
 func (fs *FlagSet) Parse(args []string, opts ...FlagSetOption) {
 	if fs.Config == nil {

@@ -15,7 +15,7 @@ func (val *StringValue) Set(v interface{}) error {
 		return err
 	}
 
-	*val.V = converted 
+	*val.V = converted
 
 	return nil
 }
@@ -24,7 +24,7 @@ func (val *StringValue) Set(v interface{}) error {
 // Accepts a list of additional resolvers that are evaluated in sequence and
 // the first one to yield a valid value is chosen.
 // If no resolver yileds a valid value the default flag value is used.
-// If flag is provided as a cli arg it will take precedance over all resolvers and the default value.
+// If flag is provided as a cli arg it will take precedence over all resolvers and the default value.
 func (fs *FlagSet) String(name, usage string, val string, r ...ResolverFunc) *string {
 	fs.initFlagSet()
 

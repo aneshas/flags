@@ -24,13 +24,13 @@ func TestShould_Convert_And_Set_Flag_Values(t *testing.T) {
 
 	var (
 		fs         flags.FlagSet
-		strFlag    = fs.String("strFlag", "Flag usage", "")
-		intFlag    = fs.Int("intFlag", "Flag usage", 0)
-		largeIFlag = fs.Int64("int46Flag", "Flag usage", 0)
-		smallFlag  = fs.Uint("uFlag", "Flag usage", 0)
-		largeUFlag = fs.Uint64("u64Flag", "Flag usage", 0)
-		boolFlag   = fs.Bool("boolFlag", "Flag usage", false)
-		floatFlag  = fs.Float64("floatFlag", "Flag usage", 0.0)
+		strFlag    = fs.String("strFlag", "Flag usage", "", newNullResolver())
+		intFlag    = fs.Int("intFlag", "Flag usage", 0, newNullResolver())
+		largeIFlag = fs.Int64("int46Flag", "Flag usage", 0, newNullResolver())
+		smallFlag  = fs.Uint("uFlag", "Flag usage", 0, newNullResolver())
+		largeUFlag = fs.Uint64("u64Flag", "Flag usage", 0, newNullResolver())
+		boolFlag   = fs.Bool("boolFlag", "Flag usage", false, newNullResolver())
+		floatFlag  = fs.Float64("floatFlag", "Flag usage", 0.0, newNullResolver())
 	)
 
 	fs.Parse(args)
@@ -73,4 +73,42 @@ func TestShould_Throw_Error_If_Setting_Non_Defined_Flag(t *testing.T) {
 	err := fs.Set(0, "", "")
 
 	assert.Error(t, err)
+}
+
+func TestShould_Throw_Error_If_Converting_A_Value_Of_Wrong_Type(t *testing.T) {
+	var fs flags.FlagSet
+
+	fs.Int("intFlag", "Flag usage", 0)
+	fs.Int64("int46Flag", "Flag usage", 0)
+	fs.Uint("uFlag", "Flag usage", 0)
+	fs.Uint64("u64Flag", "Flag usage", 0)
+	fs.Bool("boolFlag", "Flag usage", false)
+	fs.Float64("floatFlag", "Flag usage", 0.0)
+	fs.String("strFlag", "Flag usage", "")
+
+	fs.Parse(args)
+
+	err := fs.Set(0, "foo", int(0))
+	assert.Error(t, err)
+
+	err = fs.Set(1, "foo", int64(0))
+	assert.Error(t, err)
+
+	err = fs.Set(2, "foo", uint(0))
+	assert.Error(t, err)
+
+	err = fs.Set(3, "foo", uint64(0))
+	assert.Error(t, err)
+
+	err = fs.Set(4, "foo", true)
+	assert.Error(t, err)
+
+	err = fs.Set(5, "foo", float64(1.0))
+	assert.Error(t, err)
+}
+
+func newNullResolver() flags.ResolverFunc {
+	return func(fs *flags.FlagSet, flag string, t interface{}, i int) bool {
+		return true
+	}
 }

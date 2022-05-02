@@ -1,6 +1,8 @@
 package flags
 
-import "github.com/cstockton/go-conv"
+import (
+	"github.com/cstockton/go-conv"
+)
 
 // IntValue flag type.
 type IntValue struct {

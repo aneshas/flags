@@ -29,40 +29,42 @@ func (fs *FlagSet) Set(i int, v interface{}, t interface{}) error {
 		return fmt.Errorf("no flag at index %d", i)
 	}
 
+	var err error
+
 	switch t.(type) {
 	case string:
 		val := (fs.Values[i]).(StringValue)
-		val.Set(v)
+		err = val.Set(v)
 
 	case int:
 		val := (fs.Values[i]).(IntValue)
-		val.Set(v)
+		err = val.Set(v)
 
 	case int64:
 		val := (fs.Values[i]).(Int64Value)
-		val.Set(v)
+		err = val.Set(v)
 
 	case uint:
 		val := (fs.Values[i]).(UintValue)
-		val.Set(v)
+		err = val.Set(v)
 
 	case uint64:
 		val := (fs.Values[i]).(Uint64Value)
-		val.Set(v)
+		err = val.Set(v)
 
 	case bool:
 		val := (fs.Values[i]).(BoolValue)
-		val.Set(v)
+		err = val.Set(v)
 
 	case float64:
 		val := (fs.Values[i]).(Float64Value)
-		val.Set(v)
+		err = val.Set(v)
 
 	default:
 		return fmt.Errorf("unsupported flag type")
 	}
 
-	return nil
+	return err
 }
 
 // FlagSetOption func mainly used for extending FlagSet configuration for

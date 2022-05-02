@@ -7,23 +7,25 @@ import (
 	"os"
 
 	"github.com/aneshas/flags"
-	"github.com/cstockton/go-conv"
 )
 
 const configKey = "flags_json_core_resolver"
 
 type jsonConfig map[string]interface{}
 
+// WithConfigFile sets json config file path
 func WithConfigFile(path *string) flags.FlagSetOption {
 	return func(fs *flags.FlagSet) {
 		fs.Config[configKey] = path
 	}
 }
 
+// ByName sets json resolver that will use flag name as json key
 func ByName() flags.ResolverFunc {
 	return newEnv("")
 }
 
+// Named sets json resolver that will use provided name as json key
 func Named(name string) flags.ResolverFunc {
 	return newEnv(name)
 }
@@ -41,23 +43,9 @@ func newEnv(name string) flags.ResolverFunc {
 			return false
 		}
 
-		switch t.(type) {
-		case string:
-			v := (fs.Values[i]).(flags.StringValue)
-			*v.V = val.(string)
-
-		case int:
-			v := (fs.Values[i]).(flags.IntValue)
-
-			got, err := conv.Int(val)
-			if err != nil {
-				log.Fatalf("cannot convert value to int: %v", val)
-			}
-
-			*v.V = got
-
-		default:
-			panic("unsupported flag type")
+		err := fs.Set(i, val, t)
+		if err != nil {
+			log.Fatalf("json cannot set flag value: %v", err)
 		}
 
 		return true

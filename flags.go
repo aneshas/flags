@@ -23,6 +23,48 @@ type FlagSet struct {
 	Config map[string]interface{}
 }
 
+// Set sets a flag value for flag at i index
+func (fs *FlagSet) Set(i int, v interface{}, t interface{}) error {
+	if i > (len(fs.Values) - 1) {
+		return fmt.Errorf("no flag at index %d", i)
+	}
+
+	switch t.(type) {
+	case string:
+		val := (fs.Values[i]).(StringValue)
+		*val.V = v.(string)
+
+	case int:
+		val := (fs.Values[i]).(IntValue)
+		val.Set(v)
+
+	case int64:
+		val := (fs.Values[i]).(Int64Value)
+		val.Set(v)
+
+	case uint:
+		val := (fs.Values[i]).(UintValue)
+		val.Set(v)
+
+	case uint64:
+		val := (fs.Values[i]).(Uint64Value)
+		val.Set(v)
+
+	case bool:
+		val := (fs.Values[i]).(BoolValue)
+		val.Set(v)
+
+	case float64:
+		val := (fs.Values[i]).(Float64Value)
+		val.Set(v)
+
+	default:
+		return fmt.Errorf("unsupported flag type")
+	}
+
+	return nil
+}
+
 // FlagSetOption func mainly used for extending FlagSet configuration for
 // different types of resolvers.
 type FlagSetOption func(*FlagSet)
@@ -41,6 +83,10 @@ func (fs *FlagSet) Parse(args []string, opts ...FlagSetOption) {
 	}
 
 	fs.args = args
+
+	if len(fs.Values) == 0 {
+		return
+	}
 
 	fs.fs.Parse(args[1:])
 	fs.parseVals()

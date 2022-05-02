@@ -25,7 +25,7 @@ func main() {
 		json.WithConfigFile(cfg),
 	)
 
-	fmt.Printf("Host: -%s-\n", *host)
+	fmt.Println("Host: ", *host)
 	fmt.Println("Username: ", *username)
 	fmt.Println("Port: ", *port)
 }

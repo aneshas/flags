@@ -42,10 +42,8 @@ var (
 
 fs.Parse(
 	os.Args,
-  // Optional prefix
-	env.WithPrefix("MYAPP_"),
-  // Path to config file
-	json.WithConfigFile(cfg),
+	env.WithPrefix("MYAPP_"), // Optional prefix
+	json.WithConfigFile(cfg), // Path to config file
 )
 ```
 

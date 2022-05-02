@@ -32,7 +32,7 @@ func (fs *FlagSet) Set(i int, v interface{}, t interface{}) error {
 	switch t.(type) {
 	case string:
 		val := (fs.Values[i]).(StringValue)
-		*val.V = v.(string)
+		val.Set(v)
 
 	case int:
 		val := (fs.Values[i]).(IntValue)

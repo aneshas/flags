@@ -14,7 +14,7 @@ func main() {
 
 	var (
 		host     = fs.String("host", "DB host", "localhost")
-		username = fs.String("username", "DB username", "root", env.ByName(), env.Named("FOO"))
+		username = fs.String("username", "DB username", "root", json.ByName(), env.Named("UNAME"))
 		port     = fs.Int("port", "DB port", 3306, json.ByName(), env.ByName())
 		cfg      = fs.String("config", "JSON Config file", "config.json", env.ByName())
 	)

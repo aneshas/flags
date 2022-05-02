@@ -13,10 +13,10 @@ func main() {
 	var fs flags.FlagSet
 
 	var (
+		cfg      = fs.String("config", "JSON Config file", "config.json", env.ByName())
 		host     = fs.String("host", "DB host", "localhost")
 		username = fs.String("username", "DB username", "root", json.ByName(), env.Named("UNAME"))
 		port     = fs.Int("port", "DB port", 3306, json.ByName(), env.ByName())
-		cfg      = fs.String("config", "JSON Config file", "config.json", env.ByName())
 	)
 
 	fs.Parse(

@@ -3,6 +3,7 @@
 [![Go](https://github.com/aneshas/flags/actions/workflows/go.yml/badge.svg)](https://github.com/aneshas/flags/actions/workflows/go.yml)
 [![Coverage Status](https://coveralls.io/repos/github/aneshas/flags/badge.svg?branch=trunk)](https://coveralls.io/github/aneshas/flags?branch=trunk)
 [![Go Report Card](https://goreportcard.com/badge/github.com/aneshas/flags)](https://goreportcard.com/report/github.com/aneshas/flags)
+[![Go Reference](https://pkg.go.dev/badge/github.com/aneshas/flags.svg)](https://pkg.go.dev/github.com/aneshas/flags)
 
 Configuration package inspired by this [talk](https://www.youtube.com/watch?v=PTE4VJIdHPg) / [article](https://peter.bourgon.org/go-for-industrial-programming/) by Peter Bourgon.
 

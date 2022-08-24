@@ -58,6 +58,9 @@ username = fs.String("username", "DB username", "root", json.ByName(), env.Named
 
 If no `-username` flag is provided, the package would next try to find the value as a json key in the provided config file (see below), if the value is not found it will try to read the environment variable `UNAME`. You can put as many resolvers as you want (even of the same kind).
 
+So, the order of evaluation is (first value found wins):\
+`flag provided via command line` -> `resolvers in sequence (left ot right)` -> `default value`
+
 **NOTE** If flag is provided explicitly on the command line it wil **always** take a precedence regardless if value exists in environment or config file for example.
 
 One more thing to keep a note of is that the flags are evaluated in sequence. This means that if you are using flags themselves in order to provide some config for the flags package itself (eg. the config flag in the example above) and thus affecting values of other flags, you need to make sure to define those flags prior to any other flags that might be affected by them (eg. config flag must be parsed first in order to parse the correct config file needed by other flags).

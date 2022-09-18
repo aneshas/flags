@@ -7,11 +7,9 @@
 
 Configuration package inspired by this [talk](https://www.youtube.com/watch?v=PTE4VJIdHPg) / [article](https://peter.bourgon.org/go-for-industrial-programming/) by Peter Bourgon.
 
-The guiding idea behind this package is that `flags are the best way to configure your program` and thus it provides a thin wrapper
-around go standard flag package while providig an extra degree of configurability via different extendable / composable mechanisms such as
-`environment variables`, `config files` etc... on an opt-in basis.
+This package provides a wrapper of the Go standard library flag package configurable via resolvers e.g., environment variables and config files, on an opt-in basis.
 
-Two of these mechanisms are provided by default `env` for environment variables and `json` for flat json config giles. Others resolvers can be implemented additionaly.
+Two resolvers are provided by default `env` for environment variables and `json` for JSON config files. Others resolvers can be implemented.
 
 # Example Usage
 
@@ -29,7 +27,7 @@ var (
 fs.Parse(os.Args)
 ```
 
-Though where it really shines is when you use it in combination with different config mechanisms such as env flags or json config files:
+Composing different config resolvers is possible. For example using CLI flags, env variables, or JSON config files:
 
 ```go
 var fs flags.FlagSet
@@ -48,7 +46,7 @@ fs.Parse(
 )
 ```
 
-As you can see, flag definitions accept additional arguments where you can set different mechanisms that will be evaluated in a sequence and the first one that yields a valid value will be used.
+Flag definitions accept additional arguments where resolver precendence can be set. The first resolver that yields a valid value will be used.
 
 For example here:
 
@@ -56,11 +54,11 @@ For example here:
 username = fs.String("username", "DB username", "root", json.ByName(), env.Named("UNAME"))
 ```
 
-If no `-username` flag is provided, the package would next try to find the value as a json key in the provided config file (see below), if the value is not found it will try to read the environment variable `UNAME`. You can put as many resolvers as you want (even of the same kind).
+If no `-username` flag is provided, the package would then try to find the value as a JSON key in the provided config file (see below), if the value is not found it will try to read the environment variable `UNAME`.
 
 So, the order of evaluation is (first value found wins):\
 `flag provided via command line` -> `resolvers in sequence (left ot right)` -> `default value`
 
 **NOTE** If flag is provided explicitly on the command line it wil **always** take a precedence regardless if value exists in environment or config file for example.
 
-One more thing to keep a note of is that the flags are evaluated in sequence. This means that if you are using flags themselves in order to provide some config for the flags package itself (eg. the config flag in the example above) and thus affecting values of other flags, you need to make sure to define those flags prior to any other flags that might be affected by them (eg. config flag must be parsed first in order to parse the correct config file needed by other flags).
+Flags are evaluated in sequence. This means that if you are using flags themselves in order to provide some config for the flags package itself (eg. the config flag in the example above) and thus affecting values of other flags, you need to make sure to define those flags prior to any other flags that might be affected by them (eg. config flag must be parsed first in order to parse the correct config file needed by other flags).

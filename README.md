@@ -7,6 +7,9 @@
 
 Configuration package inspired by this [talk](https://www.youtube.com/watch?v=PTE4VJIdHPg) / [article](https://peter.bourgon.org/go-for-industrial-programming/) by Peter Bourgon.
 
+# Disclaimer
+Since the time of writing this package a user on reddit pointed out that Peter has actually went ahead and implemented the package himself although with slight changes in the original design. You can find his package [here](https://pkg.go.dev/github.com/peterbourgon/ff/v3#section-readme)
+
 This package provides a wrapper of the Go standard library flag package configurable via resolvers e.g., environment variables and config files, on an opt-in basis.
 
 Two resolvers are provided by default `env` for environment variables and `json` for JSON config files. Others resolvers can be implemented.
